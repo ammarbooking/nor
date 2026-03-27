@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>حجز مناسبة</title>
+  <meta name="description" content="حجز خدمات المناسبات: بكج تصوير، مرافقة عروس، كوافير">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --gold:#D946EF;
+      --gold-light:#F5B6FF;
+      --gold-dark:#A21CAF;
+      --bg:#0D0712;
+      --bg2:#140B1B;
+      --bg-card:#1A1023;
+      --bg-card2:#23142F;
+      --text:#F8ECFF;
+      --dim:#BDA7C9;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth;scroll-padding-top:100px;background:var(--bg)}
+    body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);direction:rtl;overflow-x:hidden}
+    ::-webkit-scrollbar{width:6px}
+    ::-webkit-scrollbar-thumb{background:rgba(217,70,239,0.28);border-radius:3px}
+    a{text-decoration:none}
+    input:focus, textarea:focus{border-color:var(--gold)!important;outline:none}
+    button{font-family:'Tajawal',sans-serif}
+    .hidden{display:none!important}
+
+    .marquee-bar{background:linear-gradient(90deg,var(--gold-dark),var(--gold),var(--gold-dark));overflow:hidden;white-space:nowrap;padding:10px 0;position:fixed;top:0;left:0;right:0;z-index:1000}
+    .marquee-inner{display:inline-block;animation:marquee 30s linear infinite;color:#fff;font-weight:700;font-size:13px;letter-spacing:1px}
+    .marquee-inner span{margin:0 50px}
+
+    .navbar{position:fixed;top:36px;left:0;right:0;z-index:999;transition:all .4s;padding:0 24px}
+    .navbar.scrolled{background:rgba(13,7,18,.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(217,70,239,.10)}
+    .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px}
+    .nav-logo{font-size:24px;font-weight:900;background:linear-gradient(135deg,var(--gold-dark),var(--gold),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;cursor:pointer}
+    .nav-links{display:flex;gap:32px}
+    .nav-links a{color:#cdb9d7;font-size:14px;font-weight:600;cursor:pointer;padding-bottom:4px;border-bottom:2px solid transparent;transition:all .3s}
+    .nav-links a:hover{color:var(--gold-light);border-bottom-color:var(--gold)}
+    .nav-toggle{display:none;cursor:pointer;padding:8px;flex-direction:column;gap:6px}
+    .nav-toggle span{width:24px;height:2px;background:var(--gold);display:block}
+    .nav-mobile-menu{display:none;background:rgba(13,7,18,.98);padding:20px;border-top:1px solid rgba(217,70,239,.12)}
+    .nav-mobile-menu.open{display:block}
+    .nav-mobile-menu a{display:block;color:#cdb9d7;font-size:16px;font-weight:600;padding:14px 0;border-bottom:1px solid #24152e;cursor:pointer}
+    @media(max-width:768px){.nav-links{display:none!important}.nav-toggle{display:flex!important}}
+
+    .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px;position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 30%,rgba(217,70,239,.06) 0%,transparent 50%),var(--bg)}
+    .hero-circle{position:absolute;top:15%;left:5%;width:200px;height:200px;border:1px solid rgba(217,70,239,.08);border-radius:50%;animation:float 8s ease-in-out infinite}
+    .hero-square{position:absolute;bottom:20%;right:8%;width:150px;height:150px;border:1px solid rgba(245,182,255,.06);transform:rotate(45deg);animation:float 10s ease-in-out infinite reverse}
+    .hero-content{position:relative;z-index:1;max-width:700px}
+    .hero-title{font-size:clamp(40px,8vw,72px);font-weight:900;line-height:1.1;margin:0 0 8px;background:linear-gradient(135deg,var(--gold-dark),var(--gold),var(--gold-light),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:fadeUp 1s ease-out}
+    .btn-gold{background:linear-gradient(135deg,var(--gold-dark),var(--gold),var(--gold-light));color:#fff;border:none;border-radius:14px;padding:18px 44px;font-size:17px;font-weight:800;cursor:pointer;letter-spacing:1px;box-shadow:0 8px 32px rgba(217,70,239,.24);transition:all .3s;font-family:'Tajawal',sans-serif}
+    .btn-gold:hover{transform:translateY(-2px)}
+
+    .section{padding:100px 24px}
+    .section-dark{background:var(--bg)}
+    .section-alt{background:var(--bg2)}
+    .section-inner{max-width:900px;margin:0 auto}
+    .section-label{color:var(--gold-light);font-size:13px;letter-spacing:4px;font-weight:600;margin-bottom:12px;text-align:center}
+    .section-title{color:var(--text);font-size:clamp(26px,5vw,38px);font-weight:800;text-align:center;line-height:1.3;margin-bottom:10px}
+    .gold-divider{display:flex;align-items:center;justify-content:center;gap:14px;margin:30px auto;max-width:220px}
+    .gold-divider .line-r{flex:1;height:1px;background:linear-gradient(to right,transparent,var(--gold))}
+    .gold-divider .line-l{flex:1;height:1px;background:linear-gradient(to left,transparent,var(--gold))}
+    .gold-divider .dia{color:var(--gold);font-size:12px;opacity:.7}
+    .features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px}
+    .feature-card{background:var(--bg-card);border-radius:20px;padding:36px 28px;border:1px solid #291736;text-align:center;transition:all .4s}
+    .feature-card:hover{border-color:rgba(217,70,239,.28);transform:translateY(-4px)}
+    .services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
+    .service-card{background:var(--bg-card);border-radius:24px;padding:40px 32px;border:1px solid #291736;position:relative;overflow:hidden;transition:all .4s;cursor:pointer}
+    .service-card:hover{border-color:rgba(217,70,239,.28);transform:translateY(-4px)}
+    .reviews-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+    .review-card{background:var(--bg-card);border-radius:20px;padding:32px 28px;border:1px solid #291736}
+
+    .booking-section{padding:100px 24px;background:radial-gradient(ellipse at 50% 0%,rgba(217,70,239,.04) 0%,transparent 50%),var(--bg)}
+    .booking-wrap{max-width:560px;margin:0 auto}
+    .b-steps{display:flex;justify-content:center;gap:8px;margin-bottom:28px}
+    .b-dot{height:10px;border-radius:5px;transition:all .4s}
+    .b-card{background:var(--bg-card);border-radius:16px;padding:20px;border:1px solid #311c40;cursor:pointer;transition:all .3s}
+    .b-card:hover{border-color:rgba(217,70,239,.28)}
+    .b-card.sel{background:#261430;border:2px solid var(--gold);box-shadow:0 0 24px rgba(217,70,239,.16)}
+    .b-title{color:var(--text);text-align:center;font-size:20px;font-weight:700;margin-bottom:20px}
+    .b-input{width:100%;padding:14px 18px;background:var(--bg-card2);border:1px solid #3a224b;border-radius:12px;color:#fff;font-size:16px;direction:rtl;font-family:'Tajawal',sans-serif;transition:border-color .3s;box-sizing:border-box}
+    .b-input::placeholder{color:#7e688b}
+    .btn-back{background:transparent;color:var(--gold-light);border:1px solid rgba(217,70,239,.24);border-radius:12px;padding:10px 28px;font-size:14px;cursor:pointer;font-family:'Tajawal',sans-serif}
+    .btn-confirm{background:linear-gradient(135deg,var(--gold-dark),var(--gold),var(--gold-light));color:#fff;border:none;border-radius:12px;padding:16px 40px;font-size:17px;font-weight:800;cursor:pointer;width:100%;max-width:300px;font-family:'Tajawal',sans-serif}
+    .btn-confirm:disabled{opacity:.4;cursor:not-allowed}
+    .b-step-content{transition:all .25s}
+    .b-step-content.fade-out{opacity:0;transform:translateY(16px)}
+    .b-step-content.fade-in{opacity:1;transform:translateY(0)}
+
+    .cal-nav-btn{background:rgba(217,70,239,.12);border:1px solid rgba(217,70,239,.24);color:var(--gold-light);width:42px;height:42px;border-radius:12px;cursor:pointer;font-size:20px;font-family:'Tajawal',sans-serif;transition:all .3s}
+    .cal-nav-btn:hover{background:rgba(217,70,239,.20)}
+    .cal-day-header{font-size:12px;font-weight:700;padding:8px 0;text-align:center}
+    .cal-cell{height:46px;display:flex;align-items:center;justify-content:center;border-radius:12px;font-size:15px;font-weight:700;transition:all .2s}
+    .cal-cell.clickable{cursor:pointer}
+    .cal-cell.clickable:hover{border-color:rgba(217,70,239,.48)!important}
+    .cal-cell.today{background:rgba(217,70,239,.14);color:var(--gold-light);border:1px solid rgba(217,70,239,.38)}
+    .cal-cell.selected{background:var(--gold);color:#fff;box-shadow:0 0 16px rgba(217,70,239,.32)}
+    .cal-cell.past{color:#4a3655}
+    .cal-cell.normal{background:var(--bg-card);color:var(--text);border:1px solid #311c40}
+
+    .footer{background:var(--bg-card);border-top:1px solid rgba(217,70,239,.08);padding:60px 24px 30px;text-align:center}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
+    @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+    @keyframes checkPop{0%{transform:scale(0)}50%{transform:scale(1.2)}100%{transform:scale(1)}}
+  </style>
+</head>
+<body>
+
+<div class="marquee-bar"><div class="marquee-inner">
+  <span>📸 احجزي بكج تصوير للمناسبة</span>
+  <span>👰 احجزي مرافقة عروس بسهولة</span>
+  <span>💄 احجزي خدمة كوافير في الموعد المناسب</span>
+  <span>🗓️ حددي التاريخ والوقت والموقع والملاحظات</span>
+  <span>✨ نظام حجز أنيق وسريع للمناسبات</span>
+
+  <span>📸 احجزي بكج تصوير للمناسبة</span>
+  <span>👰 احجزي مرافقة عروس بسهولة</span>
+  <span>💄 احجزي خدمة كوافير في الموعد المناسب</span>
+  <span>🗓️ حددي التاريخ والوقت والموقع والملاحظات</span>
+  <span>✨ نظام حجز أنيق وسريع للمناسبات</span>
+</div></div>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <div class="nav-logo" onclick="scrollTo_('hero')">حجز مناسبة</div>
+    <div class="nav-links">
+      <a onclick="scrollTo_('hero')">الرئيسية</a>
+      <a onclick="scrollTo_('about')">من نحن</a>
+      <a onclick="scrollTo_('services')">خدماتنا</a>
+      <a onclick="scrollTo_('booking')">احجز الآن</a>
+      <a onclick="scrollTo_('reviews')">آراء العملاء</a>
+    </div>
+    <div class="nav-toggle" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+  </div>
+  <div class="nav-mobile-menu" id="mobileMenu">
+    <a onclick="scrollTo_('hero');closeMenu()">الرئيسية</a>
+    <a onclick="scrollTo_('about');closeMenu()">من نحن</a>
+    <a onclick="scrollTo_('services');closeMenu()">خدماتنا</a>
+    <a onclick="scrollTo_('booking');closeMenu()">احجز الآن</a>
+    <a onclick="scrollTo_('reviews');closeMenu()">آراء العملاء</a>
+  </div>
+</nav>
+
+<section class="hero" id="hero">
+  <div class="hero-circle"></div><div class="hero-square"></div>
+  <div class="hero-content">
+    <div style="font-size:14px;color:var(--gold-light);letter-spacing:6px;font-weight:600;margin-bottom:20px;animation:fadeUp 1s ease-out">EVENT BOOKING</div>
+    <h1 class="hero-title">حجز مناسبة</h1>
+    <p style="font-size:clamp(16px,3vw,22px);color:var(--gold-light);font-weight:300;letter-spacing:4px;margin:0 0 30px;animation:fadeUp 1s .1s both">بكج تصوير • مرافقة عروس • كوافير</p>
+    <p style="color:var(--dim);font-size:17px;line-height:1.8;max-width:500px;margin:0 auto 40px;animation:fadeUp 1s .3s both">احجزي خدمتك بكل سهولة وحددي التاريخ والوقت والمدينة والموقع والملاحظات في خطوات بسيطة وواضحة</p>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;animation:fadeUp 1s .5s both">
+      <button class="btn-gold" onclick="scrollTo_('booking')">احجزي الآن</button>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt" id="about"><div class="section-inner">
+  <div class="section-label">من نحن</div><h2 class="section-title">تنظيم حجوزات المناسبات بشكل أنيق وسهل</h2>
+  <div class="gold-divider"><div class="line-r"></div><div class="dia">◆</div><div class="line-l"></div></div>
+  <div class="features-grid">
+    <div class="feature-card"><div style="font-size:40px;margin-bottom:16px">📸</div><h3 style="color:var(--gold-light);font-size:17px;font-weight:700;margin-bottom:10px">بكج تصوير</h3><p style="color:var(--dim);font-size:14px;line-height:1.7">حجز جلسات وبكجات التصوير للمناسبات بسهولة</p></div>
+    <div class="feature-card"><div style="font-size:40px;margin-bottom:16px">👰</div><h3 style="color:var(--gold-light);font-size:17px;font-weight:700;margin-bottom:10px">مرافقة عروس</h3><p style="color:var(--dim);font-size:14px;line-height:1.7">تحديد موعد مرافقة العروس مع كل التفاصيل المهمة</p></div>
+    <div class="feature-card"><div style="font-size:40px;margin-bottom:16px">💄</div><h3 style="color:var(--gold-light);font-size:17px;font-weight:700;margin-bottom:10px">كوافير</h3><p style="color:var(--dim);font-size:14px;line-height:1.7">تنسيق حجوزات الكوافير للمناسبات والمشاوير الخاصة</p></div>
+    <div class="feature-card"><div style="font-size:40px;margin-bottom:16px">📝</div><h3 style="color:var(--gold-light);font-size:17px;font-weight:700;margin-bottom:10px">تفاصيل كاملة</h3><p style="color:var(--dim);font-size:14px;line-height:1.7">الاسم والجوال والمدينة والموقع والملاحظات كلها واضحة أمامك</p></div>
+  </div>
+</div></section>
+
+<section class="section section-dark" id="services"><div class="section-inner">
+  <div class="section-label">خدماتنا</div><h2 class="section-title">اختاري الخدمة المناسبة لك</h2>
+  <div class="gold-divider"><div class="line-r"></div><div class="dia">◆</div><div class="line-l"></div></div>
+  <div class="services-grid">
+    <div class="service-card" onclick="scrollTo_('booking')">
+      <div style="position:absolute;top:0;right:0;width:120px;height:120px;background:radial-gradient(circle,rgba(217,70,239,.08),transparent);border-radius:0 24px 0 100%"></div>
+      <div style="width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,rgba(217,70,239,.12),rgba(245,182,255,.04));display:flex;align-items:center;justify-content:center;font-size:26px;color:var(--gold-light);border:1px solid rgba(217,70,239,.18);margin-bottom:20px;font-weight:700">📸</div>
+      <h3 style="font-size:22px;font-weight:800;margin-bottom:8px">بكج تصوير</h3>
+      <p style="color:var(--dim);font-size:14px;line-height:1.7;margin-bottom:24px">خدمة تصوير للمناسبات مع تحديد الموعد والمكان والملاحظات مسبقًا</p>
+      <div style="display:flex;align-items:center;justify-content:space-between"><div><span style="color:var(--gold-light);font-size:15px;font-weight:700">احجزي الخدمة</span></div><div style="background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#fff;padding:10px 24px;border-radius:12px;font-size:13px;font-weight:800">احجزي الآن</div></div>
+    </div>
+
+    <div class="service-card" onclick="scrollTo_('booking')">
+      <div style="position:absolute;top:0;right:0;width:120px;height:120px;background:radial-gradient(circle,rgba(217,70,239,.08),transparent);border-radius:0 24px 0 100%"></div>
+      <div style="width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,rgba(217,70,239,.12),rgba(245,182,255,.04));display:flex;align-items:center;justify-content:center;font-size:26px;color:var(--gold-light);border:1px solid rgba(217,70,239,.18);margin-bottom:20px;font-weight:700">👰</div>
+      <h3 style="font-size:22px;font-weight:800;margin-bottom:8px">مرافقة عروس</h3>
+      <p style="color:var(--dim);font-size:14px;line-height:1.7;margin-bottom:24px">خدمة مرافقة عروس مع حجز مرتب وواضح لكل تفاصيل المناسبة</p>
+      <div style="display:flex;align-items:center;justify-content:space-between"><div><span style="color:var(--gold-light);font-size:15px;font-weight:700">احجزي الخدمة</span></div><div style="background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#fff;padding:10px 24px;border-radius:12px;font-size:13px;font-weight:800">احجزي الآن</div></div>
+    </div>
+
+    <div class="service-card" onclick="scrollTo_('booking')">
+      <div style="position:absolute;top:0;right:0;width:120px;height:120px;background:radial-gradient(circle,rgba(217,70,239,.08),transparent);border-radius:0 24px 0 100%"></div>
+      <div style="width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,rgba(217,70,239,.12),rgba(245,182,255,.04));display:flex;align-items:center;justify-content:center;font-size:26px;color:var(--gold-light);border:1px solid rgba(217,70,239,.18);margin-bottom:20px;font-weight:700">💄</div>
+      <h3 style="font-size:22px;font-weight:800;margin-bottom:8px">كوافير</h3>
+      <p style="color:var(--dim);font-size:14px;line-height:1.7;margin-bottom:24px">خدمة كوافير للمناسبات مع تسجيل المدينة والموقع والملاحظات كاملة</p>
+      <div style="display:flex;align-items:center;justify-content:space-between"><div><span style="color:var(--gold-light);font-size:15px;font-weight:700">احجزي الخدمة</span></div><div style="background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#fff;padding:10px 24px;border-radius:12px;font-size:13px;font-weight:800">احجزي الآن</div></div>
+    </div>
+  </div>
+</div></section>
+
+<section class="booking-section" id="booking"><div class="section-inner">
+  <div class="section-label">احجزي الآن</div><h2 class="section-title">احجزي المناسبة في دقائق</h2>
+  <div class="gold-divider"><div class="line-r"></div><div class="dia">◆</div><div class="line-l"></div></div>
+  <div class="booking-wrap">
+    <div class="b-steps" id="bSteps"></div>
+    <div class="b-step-content fade-in" id="bContent">
+
+      <div id="bStep0">
+        <h3 class="b-title">اختاري الخدمة</h3>
+        <div style="display:flex;flex-direction:column;gap:14px" id="serviceList"></div>
+      </div>
+
+      <div id="bStep1" class="hidden">
+        <h3 class="b-title">اختاري التاريخ</h3>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding:0 4px">
+          <button class="cal-nav-btn" onclick="calNext()">→</button>
+          <div id="calMonthLabel" style="color:var(--gold-light);font-size:18px;font-weight:800;letter-spacing:1px"></div>
+          <button class="cal-nav-btn" onclick="calPrev()">←</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:8px">
+          <div class="cal-day-header" style="color:var(--gold-light)">سبت</div>
+          <div class="cal-day-header" style="color:var(--dim)">أحد</div>
+          <div class="cal-day-header" style="color:var(--dim)">إثن</div>
+          <div class="cal-day-header" style="color:var(--dim)">ثلا</div>
+          <div class="cal-day-header" style="color:var(--dim)">أرب</div>
+          <div class="cal-day-header" style="color:var(--dim)">خمي</div>
+          <div class="cal-day-header" style="color:#5c4a66">جمع</div>
+        </div>
+        <div id="calGrid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px"></div>
+        <div style="text-align:center;margin-top:20px"><button class="btn-back" onclick="goStep(0)">→ رجوع</button></div>
+      </div>
+
+      <div id="bStep2" class="hidden">
+        <h3 class="b-title">اختاري الوقت</h3>
+        <div id="timeGrid" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px"></div>
+        <div style="text-align:center;margin-top:20px"><button class="btn-back" onclick="goStep(1)">→ رجوع</button></div>
+      </div>
+
+      <div id="bStep3" class="hidden">
+        <h3 class="b-title">بيانات الحجز</h3>
+        <div id="bookingSummary" style="background:linear-gradient(135deg,rgba(217,70,239,.04),var(--bg-card));border-radius:14px;padding:16px;border:1px solid #311c40;margin-bottom:20px"></div>
+
+        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:22px">
+          <input type="text" class="b-input" id="inpName" placeholder="الاسم الكامل" oninput="checkReady()">
+          <input type="tel" class="b-input" id="inpPhone" placeholder="رقم الجوال (05XXXXXXXX)" oninput="checkReady()">
+          <input type="text" class="b-input" id="inpCity" placeholder="المدينة" oninput="checkReady()">
+          <input type="text" class="b-input" id="inpLocation" placeholder="الموقع / عنوان المناسبة" oninput="checkReady()">
+          <textarea class="b-input" id="inpNotes" placeholder="الملاحظات" oninput="checkReady()" style="min-height:120px;resize:vertical"></textarea>
+        </div>
+
+        <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
+          <button class="btn-confirm" id="confirmBtn" disabled onclick="confirmBooking()">تأكيد الحجز</button>
+          <button class="btn-back" onclick="goStep(2)">→ رجوع</button>
+        </div>
+      </div>
+
+      <div id="bConfirm" class="hidden" style="text-align:center">
+        <div style="width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,var(--gold-dark),var(--gold));display:flex;align-items:center;justify-content:center;margin:0 auto 20px;animation:checkPop .6s ease-out;box-shadow:0 0 40px rgba(217,70,239,.26)"><span style="font-size:42px;color:#fff">✓</span></div>
+        <h3 style="color:var(--gold-light);font-size:26px;font-weight:800;margin-bottom:6px">تم تأكيد الحجز</h3>
+        <p style="color:var(--dim);font-size:14px;margin-bottom:28px">تم حفظ بيانات الحجز داخل الصفحة</p>
+        <div id="confirmDetails" style="background:var(--bg-card);border-radius:16px;padding:20px;border:1px solid #311c40;text-align:right;margin-bottom:24px"></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
+          <button class="btn-back" onclick="resetBooking()">حجز جديد</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div></section>
+
+<section class="section section-alt" id="reviews"><div class="section-inner">
+  <div class="section-label">آراء العملاء</div><h2 class="section-title">ماذا يقول عملاؤنا</h2>
+  <div class="gold-divider"><div class="line-r"></div><div class="dia">◆</div><div class="line-l"></div></div>
+  <div class="reviews-grid">
+    <div class="review-card"><div style="color:var(--gold);font-size:32px;opacity:.4;margin-bottom:16px">"</div><p style="color:#e8daef;font-size:14px;line-height:1.8;margin-bottom:20px">النظام سهل جدًا والحجز واضح من أول خطوة لآخر خطوة</p></div>
+    <div class="review-card"><div style="color:var(--gold);font-size:32px;opacity:.4;margin-bottom:16px">"</div><p style="color:#e8daef;font-size:14px;line-height:1.8;margin-bottom:20px">أحببت شكل الموقع والألوان والخطوات مرتبة بشكل جميل</p></div>
+    <div class="review-card"><div style="color:var(--gold);font-size:32px;opacity:.4;margin-bottom:16px">"</div><p style="color:#e8daef;font-size:14px;line-height:1.8;margin-bottom:20px">الموقع أنيق والمعلومات تظهر كاملة بدون أي تعقيد</p></div>
+  </div>
+</div></section>
+
+<footer class="footer"><div style="max-width:900px;margin:0 auto">
+  <div style="font-size:32px;font-weight:900;background:linear-gradient(135deg,var(--gold-dark),var(--gold),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px">حجز مناسبة</div>
+  <p style="color:var(--gold-light);font-size:13px;letter-spacing:3px;margin-bottom:24px">بكج تصوير • مرافقة عروس • كوافير</p>
+</div></footer>
+
+<script>
+var menuOpen = false;
+function toggleMenu() { menuOpen = !menuOpen; document.getElementById('mobileMenu').classList.toggle('open', menuOpen); }
+function closeMenu() { menuOpen = false; document.getElementById('mobileMenu').classList.remove('open'); }
+function scrollTo_(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
+window.addEventListener('scroll', function() { document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60); });
+
+var bStep = 0;
+var bData = {
+  service:'', serviceName:'', servicePrice:0,
+  day:'', dayLabel:'', time:'',
+  name:'', phone:'',
+  city:'', location:'', notes:''
+};
+
+var calYear, calMonth;
+var now = new Date(); calYear = now.getFullYear(); calMonth = now.getMonth();
+
+var SERVICES_DATA = [
+  { id:'photo_package', name:'بكج تصوير', price:0, icon:'📸' },
+  { id:'bride_assistant', name:'مرافقة عروس', price:0, icon:'👰' },
+  { id:'hairdresser', name:'كوافير', price:0, icon:'💄' }
+];
+
+var AR_MONTHS = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+var AR_DAYS_FULL = ['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+
+function genTimes() {
+  var s = [];
+  for (var h = 15; h <= 23; h++) {
+    var d = h > 12 ? h - 12 : h;
+    var p = h >= 12 ? 'م' : 'ص';
+    s.push(d + ':00 ' + p);
+    if (h < 23) s.push(d + ':30 ' + p);
+  }
+  s.push('12:00 ص');
+  return s;
+}
+var TIMES = genTimes();
+
+function renderSteps() {
+  var el = document.getElementById('bSteps'); el.innerHTML = '';
+  for (var i = 0; i < 4; i++) {
+    var d = document.createElement('div'); d.className = 'b-dot';
+    d.style.width = (i === bStep) ? '32px' : '10px';
+    d.style.background = (i === bStep) ? 'var(--gold)' : (i < bStep) ? 'var(--gold-dark)' : '#3b2847';
+    el.appendChild(d);
+  }
+}
+
+function showStep(n) {
+  bStep = n;
+  for (var i = 0; i <= 3; i++) document.getElementById('bStep' + i).classList.add('hidden');
+  document.getElementById('bConfirm').classList.add('hidden');
+  document.getElementById('bStep' + n).classList.remove('hidden');
+  renderSteps();
+}
+
+function transitionTo(n) {
+  var c = document.getElementById('bContent');
+  c.classList.remove('fade-in'); 
+  c.classList.add('fade-out');
+  setTimeout(function() {
+    showStep(n);
+    if (n === 1) renderCalendar();
+    if (n === 2) renderTimes();
+    c.classList.remove('fade-out'); 
+    c.classList.add('fade-in');
+  }, 250);
+}
+
+function goStep(n) { transitionTo(n); }
+
+function renderServices() {
+  var el = document.getElementById('serviceList'); 
+  el.innerHTML = '';
+  SERVICES_DATA.forEach(function(s) {
+    var card = document.createElement('div');
+    card.className = 'b-card';
+    card.style.cssText = 'display:flex;align-items:center;gap:16px;padding:24px';
+    card.innerHTML =
+      '<div style="width:52px;height:52px;border-radius:14px;background:rgba(217,70,239,.10);display:flex;align-items:center;justify-content:center;font-size:22px;border:1px solid rgba(217,70,239,.16);flex-shrink:0">' + s.icon + '</div>' +
+      '<div style="flex:1"><div style="font-size:19px;font-weight:700">' + s.name + '</div><div style="color:var(--dim);font-size:12px;margin-top:3px">خدمة مناسبات</div></div>' +
+      '<div style="background:linear-gradient(135deg,var(--gold-dark),var(--gold),var(--gold-light));color:#fff;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:800;white-space:nowrap">احجزي الآن</div>';
+
+    card.onclick = function() {
+      bData.service = s.id;
+      bData.serviceName = s.name;
+      bData.servicePrice = s.price;
+      transitionTo(1);
+    };
+    el.appendChild(card);
+  });
+}
+
+function calPrev() {
+  var n = new Date();
+  if (calMonth === n.getMonth() && calYear === n.getFullYear()) return;
+  calMonth--;
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  renderCalendar();
+}
+
+function calNext() {
+  var n = new Date();
+  var maxM = n.getMonth() + 3;
+  var maxY = n.getFullYear() + Math.floor(maxM / 12);
+  maxM = maxM % 12;
+  if (calYear > maxY || (calYear === maxY && calMonth >= maxM)) return;
+  calMonth++;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  renderCalendar();
+}
+
+function renderCalendar() {
+  document.getElementById('calMonthLabel').textContent = AR_MONTHS[calMonth] + ' ' + calYear;
+  var grid = document.getElementById('calGrid');
+  grid.innerHTML = '';
+
+  var today = new Date(); 
+  today.setHours(0, 0, 0, 0);
+  var firstDay = new Date(calYear, calMonth, 1);
+  var startDow = firstDay.getDay();
+  var offset = (startDow + 1) % 7;
+  var daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+
+  for (var e = 0; e < offset; e++) {
+    var empty = document.createElement('div');
+    empty.style.height = '46px';
+    grid.appendChild(empty);
+  }
+
+  for (var d = 1; d <= daysInMonth; d++) {
+    var date = new Date(calYear, calMonth, d);
+    var dow = date.getDay();
+    var isPast = date < today;
+    var isFriday = dow === 5;
+    var isToday = date.getTime() === today.getTime();
+    var dateStr = calYear + '-' + String(calMonth + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+    var isSelected = bData.day === dateStr;
+    var disabled = isPast || isFriday;
+
+    var cell = document.createElement('div');
+    cell.className = 'cal-cell';
+
+    if (isSelected) {
+      cell.classList.add('selected');
+    } else if (isToday && !disabled) {
+      cell.classList.add('today', 'clickable');
+    } else if (disabled) {
+      cell.classList.add('past');
+    } else {
+      cell.classList.add('normal', 'clickable');
+    }
+
+    cell.textContent = d;
+
+    if (!disabled && !isSelected) {
+      (function(dateStr, d, dow) {
+        cell.onclick = function() {
+          var dayName = AR_DAYS_FULL[dow];
+          bData.day = dateStr;
+          bData.dayLabel = dayName + ' ' + d + ' ' + AR_MONTHS[calMonth] + ' ' + calYear;
+          bData.time = '';
+          renderCalendar();
+          setTimeout(function() { transitionTo(2); }, 300);
+        };
+      })(dateStr, d, dow);
+    }
+
+    grid.appendChild(cell);
+  }
+}
+
+function renderTimes() {
+  var g = document.getElementById('timeGrid');
+  g.innerHTML = '';
+
+  TIMES.forEach(function(t) {
+    var card = document.createElement('div');
+    card.className = 'b-card' + (bData.time === t ? ' sel' : '');
+    card.style.textAlign = 'center';
+    card.style.padding = '14px 8px';
+    var col = bData.time === t ? 'var(--gold-light)' : 'var(--text)';
+    card.innerHTML = '<div style="font-size:14px;font-weight:600;color:' + col + '">' + t + '</div>';
+
+    (function(time) {
+      card.onclick = function() {
+        bData.time = time;
+        renderTimes();
+        setTimeout(function() {
+          renderSummary();
+          transitionTo(3);
+        }, 200);
+      };
+    })(t);
+
+    g.appendChild(card);
+  });
+
+  if (g.innerHTML === '') {
+    g.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#9983a4">لا يوجد أوقات متاحة</div>';
+  }
+}
+
+function renderSummary() {
+  document.getElementById('bookingSummary').innerHTML =
+    '<div style="margin-bottom:6px"><span style="color:var(--dim);font-size:12px">🎀 ' + bData.serviceName + '</span></div>' +
+    '<div style="margin-bottom:6px"><span style="color:var(--dim);font-size:12px">📅 ' + bData.dayLabel + '</span></div>' +
+    '<div style="margin-bottom:6px"><span style="color:var(--dim);font-size:12px">🕐 ' + bData.time + '</span></div>';
+}
+
+function checkReady() {
+  var n = document.getElementById('inpName').value.trim();
+  var p = document.getElementById('inpPhone').value.trim();
+  var c = document.getElementById('inpCity').value.trim();
+  var l = document.getElementById('inpLocation').value.trim();
+
+  document.getElementById('confirmBtn').disabled = !(n && p && c && l && bData.day && bData.time && bData.service);
+}
+
+function confirmBooking() {
+  var btn = document.getElementById('confirmBtn');
+
+  bData.name = document.getElementById('inpName').value.trim();
+  bData.phone = document.getElementById('inpPhone').value.trim();
+  bData.city = document.getElementById('inpCity').value.trim();
+  bData.location = document.getElementById('inpLocation').value.trim();
+  bData.notes = document.getElementById('inpNotes').value.trim();
+
+  if (!bData.name || !bData.phone || !bData.city || !bData.location) {
+    alert('كمّلي البيانات أولًا');
+    return;
+  }
+
+  if (!bData.day || !bData.time || !bData.service) {
+    alert('اختاري الخدمة والتاريخ والوقت أولًا');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'جاري التأكيد...';
+
+  var c = document.getElementById('bContent');
+  c.classList.remove('fade-in');
+  c.classList.add('fade-out');
+
+  setTimeout(function() {
+    document.getElementById('bStep0').classList.add('hidden');
+    document.getElementById('bStep1').classList.add('hidden');
+    document.getElementById('bStep2').classList.add('hidden');
+    document.getElementById('bStep3').classList.add('hidden');
+
+    var items = [
+      { l:'الخدمة', v:bData.serviceName, ic:'🎀' },
+      { l:'التاريخ', v:bData.dayLabel, ic:'📅' },
+      { l:'الوقت', v:bData.time, ic:'🕐' },
+      { l:'الاسم', v:bData.name, ic:'👤' },
+      { l:'الجوال', v:bData.phone, ic:'📱' },
+      { l:'المدينة', v:bData.city, ic:'🏙️' },
+      { l:'الموقع', v:bData.location, ic:'📍' },
+      { l:'الملاحظات', v:bData.notes || 'لا يوجد', ic:'📝' }
+    ];
+
+    document.getElementById('confirmDetails').innerHTML = items.map(function(it, i) {
+      return '<div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;' +
+        (i < items.length - 1 ? 'border-bottom:1px solid #311c40' : '') +
+        '"><span style="color:var(--dim);font-size:13px">' + it.ic + ' ' + it.l +
+        '</span><span style="font-size:14px;font-weight:600;text-align:left">' + it.v + '</span></div>';
+    }).join('');
+
+    document.getElementById('bConfirm').classList.remove('hidden');
+    renderSteps();
+    c.classList.remove('fade-out');
+    c.classList.add('fade-in');
+    btn.textContent = 'تأكيد الحجز';
+    btn.disabled = false;
+  }, 250);
+}
+
+function resetBooking() {
+  bData = {
+    service:'', serviceName:'', servicePrice:0,
+    day:'', dayLabel:'', time:'',
+    name:'', phone:'',
+    city:'', location:'', notes:''
+  };
+
+  document.getElementById('inpName').value = '';
+  document.getElementById('inpPhone').value = '';
+  document.getElementById('inpCity').value = '';
+  document.getElementById('inpLocation').value = '';
+  document.getElementById('inpNotes').value = '';
+  document.getElementById('confirmBtn').disabled = true;
+  document.getElementById('confirmBtn').textContent = 'تأكيد الحجز';
+  transitionTo(0);
+}
+
+renderSteps();
+renderServices();
+renderCalendar();
+</script>
+</body>
+</html>
